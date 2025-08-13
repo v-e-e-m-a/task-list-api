@@ -106,7 +106,7 @@ def edit_task():
         task_list.update_task(task["id"], title, description)
 
         print("\nUpdated Task:")
-        updated_task = task_list.get_task(task.id)
+        updated_task = task_list.get_task(task["id"])
         print_task(updated_task)
 
 
@@ -130,7 +130,7 @@ def change_task_complete_status(status):
             task_list.mark_incomplete(task["id"])
 
         print(f"\nTask marked {status_text}:")
-        updated_task = task_list.get_task(task.id)
+        updated_task = task_list.get_task(task["id"])
         print_task(updated_task)
 
 
