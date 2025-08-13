@@ -1,8 +1,8 @@
 import requests
 
-url = "http://localhost:5000"
+url = "http://127.0.0.1:5000"
 
-def parse_response(response):
+def parse_task_from_response(response):
     if response.status_code >= 400:
         return None
     
@@ -15,18 +15,21 @@ def create_task(title, description, completed_at=None):
         "completed_at": completed_at
     }
     response = requests.post(url+"/tasks",json=query_params)
-    return parse_response(response)
+    return parse_task_from_response(response)
+
 
 def list_tasks():
     response = requests.get(url+"/tasks")
     return response.json()
+
 
 def get_task(id):
     response = requests.get(url+f"/tasks/{id}")
     if response.status_code != 200:
         return None
         
-    return parse_response(response)
+    return parse_task_from_response(response)
+
 
 def update_task(id,title,description):
 
@@ -40,20 +43,20 @@ def update_task(id,title,description):
         json=query_params
         )
 
-    return parse_response(response)
+    return response
+
 
 def delete_task(id):
     response = requests.delete(url+f"/tasks/{id}")
-    return response.json()
+    return response
+
 
 def mark_complete(id):
     response = requests.patch(url+f"/tasks/{id}/mark_complete")
-    return parse_response(response)
+    return response
+
 
 def mark_incomplete(id):
     response = requests.patch(url+f"/tasks/{id}/mark_incomplete")
-    return parse_response(response)
+    return response
 
-
-
-    
