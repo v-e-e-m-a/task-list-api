@@ -1,5 +1,35 @@
+from app.models.goal import Goal
 import pytest
 
+@pytest.mark.skip(reason="No way to test this feature yet")
+def test_goal_to_dict():
+    #Arrange
+    new_goal = Goal(title="Seize the Day!")
+    
+    #Act
+    goal_dict = new_goal.to_dict()
+
+    #Assert
+    assert goal_dict == {
+        "id": None,
+        "title": "Seize the Day!"
+    }
+
+@pytest.mark.skip(reason="No way to test this feature yet")
+def test_goal_from_dict():
+    #Arrange
+    goal_dict =  {
+        "title": "Seize the Day!",
+    }
+
+    expected_goal = Goal(title="Seize the Day!")
+
+    #Act
+    goal_obj =  Goal.from_dict(goal_dict)
+
+    #Assert
+    assert goal_obj.id is None
+    assert goal_obj.title == expected_goal.title
 
 @pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_goals_no_saved_goals(client):
