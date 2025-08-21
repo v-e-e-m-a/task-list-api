@@ -11,6 +11,7 @@ def test_task_to_dict():
     
     #Act
     task_dict = new_task.to_dict()
+
     #Assert
     assert task_dict == {
         "id": None,
@@ -31,6 +32,7 @@ def test_task_from_dict():
     expected_task = Task(title="Make My Bed", 
                     description="Start the day off right!", 
                     completed_at=None)
+    
     #Act
     task_obj =  Task.from_dict(task_dict)
 
