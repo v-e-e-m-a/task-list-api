@@ -35,7 +35,11 @@ def test_route_utilities_validate_model_with_task_invalid_id(client, three_tasks
     # Test that the correct status code and response message are returned
     response = e.value.get_response()
     assert response.status_code == 400
-    assert response.get_json() == {"message": "Task One invalid"}
+
+    raise Exception("Complete test with an assertion about the response body")
+    # *****************************************************************************
+    # ** Complete test with an assertion about the response body ****************
+    # *****************************************************************************
 
 @pytest.mark.skip(reason="No way to test this feature yet")
 def test_route_utilities_validate_model_with_task_missing_id(client, three_tasks):
