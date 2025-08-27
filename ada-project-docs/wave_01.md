@@ -67,7 +67,8 @@ Use the tests in `tests/test_wave_01.py` to guide your implementation.
 - Pay attention to the exact shape of the expected JSON. Double-check nested data structures and the names of the keys for any misspellings.
   - That said, remember that dictionaries do not have an implied order. This is still true in JSON with objects. When you make Postman requests, the order of the key/value pairings within the response JSON object does not need to match the order specified in this document. (The term "object" in JSON is analogous to "dictionary" in Python.)
 - Notice that the details for a Task in the response is shared across all the endpoints that return Task details. Rather than repeating the same literal `dict` structure in each response, we should create a helper method that returns the `dict` structure for a Task, and use it in each relevant endpoint. This will ensure that all our responses are consistent.
-- Retrieving a model by its ID is a common operation. We should create a route helper method that can retrieve a model by its ID, and use it in relevant routes. 
+- We should remember that retrieving a model by its ID is a common operation. We should consider creating a route helper method that can retrieve a model by its ID, and use it in all applicable routes. 
+    - This method could start out only working for Task models. But, knowing that we'll be working with Goal models later on, it might be worth generalizing this method to work with any model.
 
 ### CLI
 
@@ -156,8 +157,6 @@ As a client, I want to be able to make a `GET` request to `/tasks/1` when there 
 }
 ```
 
-We should remember that retrieving a model by its ID is a common operation. We should consider creating a route helper method that can retrieve a model by its ID, and use it in this route. 
-- This method could start out only working for Task models. But, knowing that we'll be working with Goal models later on, it might be worth generalizing this method to work with any model.
 
 #### Update Task
 

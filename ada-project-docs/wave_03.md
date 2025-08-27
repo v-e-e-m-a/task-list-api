@@ -4,7 +4,7 @@
 
 Our task list API allows users to meaningfully use the task resource. Users want to be able to mark a task as "complete" or "incomplete."
 
-We want to design our API so that it stores a task's `completed_at` date as a datetime value in our database. In this scenario, our API does _not_ give users the `completed_at` date – it only gives the information if `is_complete` is `true` or `false`.
+We want to design our API so that it stores a task's `completed_at` date as a datetime value in our database. In this scenario, our API does _not_ give users the `completed_at` date – it only indicates whether `is_complete` is `true` or `false`.
 
 A task's `is_complete` is:
 - `true` when there is a datetime for the task's `completed_at` value.

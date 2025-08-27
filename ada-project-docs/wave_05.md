@@ -3,7 +3,7 @@
 ## Goal
 
 Our task list API should be able to work with an entity called `Goal`.
-- `Goal`s are entities that describe a task a user wants to complete.
+- `Goal`s are entities that describe a set of tasks a user wants to complete.
 - They contain a title to name the goal.
 
 Our plan for this wave is to be able to create, read, update, and delete different `Goal`s. We will create RESTful routes for these different operations.
