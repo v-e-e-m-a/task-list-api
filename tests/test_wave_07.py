@@ -117,7 +117,7 @@ def test_route_utilities_create_model_with_task_missing_title(client):
     
     response = e.value.get_response()
     assert response.status_code == 400
-    assert response.get_json() == {"message": "Invalid request: missing title"}
+    assert response.get_json() == {"details": "Invalid data"}
 
 
 @pytest.mark.skip(reason="No way to test this feature yet")
