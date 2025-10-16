@@ -141,7 +141,7 @@ Open Postman and make a request that mimics the API call to Slack that we just t
 ![](assets/postman_request_body.png)
 
 - In "Headers," add this new key-value pair:
-  - `Authorization`: `"Bearer xoxb-150..."`, where `xoxb-150...` is your full Slackbot token
+  - `Authorization`: `Bearer xoxb-150...`, where `xoxb-150...` is your full Slackbot token
 
 ![](assets/postman_headers.png)
 
