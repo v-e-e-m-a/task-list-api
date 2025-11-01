@@ -1,5 +1,6 @@
 from flask import Blueprint, abort, make_response, request
 from app.models.task import Task
+from .route_utilities import validate_task
 from ..db import db
 
 tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
@@ -45,21 +46,5 @@ def get_one_task(task_id):
     task = validate_task(task_id)
 
     return task.to_dict()
-
-def validate_task(task_id):
-    try:
-        task_id = int(task_id)
-    except:
-        response = {"message": f"task {task_id} invalid"}
-        abort(make_response(response , 400))
-
-    query = db.select(Task).where(Task.id == task_id)
-    task = db.session.scalar(query)
-    
-    if not task:
-        response = {"message": f"task {task_id} not found"}
-        abort(make_response(response, 404))
-
-    return task
 
 
