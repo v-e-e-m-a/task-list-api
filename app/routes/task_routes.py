@@ -8,13 +8,15 @@ tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 @tasks_bp.post("")
 def create_task():
     request_body = request.get_json()
-    id = request_body["id"]
+    #id = request_body["id"]
     title = request_body["title"]
     description = request_body["description"]
-    is_complete = request_body["is_complete"]
+    # Use .get so missing 'is_complete' in the request doesn't raise KeyError.
+    is_complete = request_body.get("is_complete", False)
+
     # completed_at = request_body["completed_at"]
 
-    new_task = Task(id=id, title=title, description=description, is_complete=is_complete)
+    new_task = Task(title=title, description=description, is_complete=is_complete)
     db.session.add(new_task)
     db.session.commit()
 
