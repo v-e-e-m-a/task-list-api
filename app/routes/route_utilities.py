@@ -17,3 +17,10 @@ def validate_task(task_id):
         abort(make_response(response, 404))
 
     return task
+
+def validate_post_attribute(request_body, attribute):
+    if request_body.get(attribute):
+        return request_body[attribute]
+    else:
+        response = {"details": "Invalid data"}
+        abort(make_response(response, 400))
