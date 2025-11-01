@@ -1,5 +1,6 @@
 from flask import Blueprint, abort, make_response, request, Response
-from app.models.task import Task
+from sqlalchemy import desc
+from app.models.task import Task, datetime
 from .route_utilities import validate_task, validate_post_attribute
 from ..db import db
 
@@ -21,22 +22,24 @@ def create_task():
     db.session.add(new_task)
     db.session.commit()
 
-    response = {
-        "id": new_task.id,
-        "title": new_task.title,
-        "description": new_task.description,
-        "is_complete": new_task.is_complete,
-        # "completed_at": new_task.completed_at
-    }
+    response = new_task.to_dict()
 
     return response, 201
 
 
 @tasks_bp.get("")
 def get_all_tasks():
+    sort_param = request.args.get("sort")
+
     query = db.select(Task)
 
-    tasks = db.session.scalars(query.order_by(Task.id))
+    if sort_param == "asc":
+        query = query.order_by(Task.title)
+    
+    if sort_param == "desc":
+        query = query.order_by(desc(Task.title))
+
+    tasks = db.session.scalars(query)
 
     tasks_response = []
 
@@ -72,3 +75,25 @@ def delete_one_task(task_id):
     db.session.commit()
 
     return Response(status=204, mimetype="application/json")
+
+@tasks_bp.patch("<task_id>/mark_complete")
+def mark_complete_by_task_id(task_id):
+    task = validate_task(task_id)
+
+    task.is_complete = True
+    task.completed_at = datetime.now()
+
+    db.session.commit()
+
+    return task.to_dict(), 204
+
+@tasks_bp.patch("<task_id>/mark_incomplete")
+def mark_incomplete(task_id):
+    task = validate_task(task_id)
+
+    task.is_complete = False
+    task.completed_at = None
+
+    db.session.commit()
+
+    return task.to_dict(), 204
