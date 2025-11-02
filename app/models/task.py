@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Boolean, DateTime
 from ..db import db
 from datetime import datetime
 
@@ -6,8 +7,8 @@ class Task(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column()
     description: Mapped[str] = mapped_column()
-    is_complete: Mapped[bool] = mapped_column(default=False)
-    completed_at: Mapped[datetime] = mapped_column(nullable=True, default=None)
+    is_complete: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True, server_default=None)
     
     def to_dict(self):
         """Return a plain dict of this Task's attribute values.
