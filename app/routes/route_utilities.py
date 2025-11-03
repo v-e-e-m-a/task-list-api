@@ -39,3 +39,5 @@ def validate_goal(goal_id):
     if not goal:
         response = {"message": f"goal {goal_id} not found"}
         abort(make_response(response, 404))
+    
+    return goal
