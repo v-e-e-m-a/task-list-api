@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, make_response, request, Response
 from sqlalchemy import desc
 from app.models.task import Task, datetime
-from .route_utilities import validate_model, validate_post_attribute
+from .route_utilities import validate_model, validate_post_attribute, create_model
 import os
 from slack_sdk import WebClient
 from ..db import db
@@ -14,19 +14,17 @@ def create_task():
     
     title = validate_post_attribute(request_body, "title")
     description = validate_post_attribute(request_body, "description")
-    
-    # Use .get so missing 'is_complete' in the request doesn't raise KeyError.
     is_complete = request_body.get("is_complete", False)
 
-    # completed_at = request_body["completed_at"]
+    task_data = {
+        "title": title,
+        "description": description,
+        "is_complete": is_complete
+    }
 
-    new_task = Task(title=title, description=description, is_complete=is_complete)
-    db.session.add(new_task)
-    db.session.commit()
+    new_task = create_model(Task, task_data)
 
-    response = new_task.to_dict()
-
-    return response, 201
+    return new_task
 
 
 @tasks_bp.get("")

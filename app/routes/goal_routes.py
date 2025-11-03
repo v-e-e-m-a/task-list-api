@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, make_response, request, Response
 from sqlalchemy import desc
 from app.models.goal import Goal
-from .route_utilities import validate_post_attribute, validate_model
+from .route_utilities import validate_post_attribute, validate_model, create_model
 import os
 from slack_sdk import WebClient
 from ..db import db
@@ -14,13 +14,13 @@ def create_goal():
     
     title = validate_post_attribute(request_body, "title")
 
-    new_goal = Goal(title=title)
-    db.session.add(new_goal)
-    db.session.commit()
+    goal_data = {
+        "title": title
+    }
 
-    response = new_goal.to_dict()
+    new_goal = create_model(Goal, goal_data)
 
-    return response, 201
+    return new_goal
 
 @goals_bp.get("/<goal_id>")
 def get_goal_by_id(goal_id):

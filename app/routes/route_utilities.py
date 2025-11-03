@@ -4,18 +4,18 @@ from app.models.goal import Goal
 from ..db import db
 
 
-# def create_model(cls, model_data):
-#     try:
-#         new_model = cls.from_dict(model_data)
+def create_model(cls, model_data):
+    try:
+        new_model = cls.from_dict(model_data)
         
-#     except KeyError as error:
-#         response = {"message": f"Invalid request: missing {error.args[0]}"}
-#         abort(make_response(response, 400))
+    except KeyError as error:
+        response = {"message": f"Invalid request: missing {error.args[0]}"}
+        abort(make_response(response, 400))
     
-#     db.session.add(new_model)
-#     db.session.commit()
+    db.session.add(new_model)
+    db.session.commit()
 
-#     return new_model.to_dict(), 201
+    return new_model.to_dict(), 201
 
 def validate_model(cls, model_id):
     try:
@@ -39,19 +39,3 @@ def validate_post_attribute(request_body, attribute):
     else:
         response = {"details": "Invalid data"}
         abort(make_response(response, 400))
-
-# def validate_goal(goal_id):
-#     try:
-#         goal_id = int(goal_id)
-#     except:
-#         response = {"message": f"goal {goal_id} invalid"}
-#         abort(make_response(response , 400))
-
-#     query = db.select(Goal).where(Goal.id == goal_id)
-#     goal = db.session.scalar(query)
-    
-#     if not goal:
-#         response = {"message": f"goal {goal_id} not found"}
-#         abort(make_response(response, 404))
-    
-#     return goal
