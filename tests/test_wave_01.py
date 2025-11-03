@@ -149,7 +149,7 @@ def test_get_task_not_found(client):
     # Assert
     assert response.status_code == 404
 
-    assert response_body == {"message": "task 1 not found"}
+    assert response_body == {"message": "Task 1 not found"}
 
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
@@ -210,7 +210,7 @@ def test_update_task_not_found(client):
     # Assert
     assert response.status_code == 404
 
-    assert response_body == {"message": "task 1 not found"}
+    assert response_body == {"message": "Task 1 not found"}
 
 
 #@pytest.mark.skip(reason="No way to test this feature yet")
@@ -233,7 +233,7 @@ def test_delete_task_not_found(client):
     # Assert
     assert response.status_code == 404
 
-    assert response_body == {"message": "task 1 not found"}
+    assert response_body == {"message": "Task 1 not found"}
 
     assert db.session.scalars(db.select(Task)).all() == []
 

@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, make_response, request, Response
 from sqlalchemy import desc
 from app.models.goal import Goal
-from .route_utilities import validate_task, validate_post_attribute, validate_goal
+from .route_utilities import validate_post_attribute, validate_model
 import os
 from slack_sdk import WebClient
 from ..db import db
@@ -24,7 +24,7 @@ def create_task():
 
 @goals_bp.get("/<goal_id>")
 def get_goal_by_id(goal_id):
-    goal = validate_goal(goal_id)
+    goal = validate_model(Goal, goal_id)
 
     return goal.to_dict()
 
@@ -43,7 +43,7 @@ def get_all_goals():
 
 @goals_bp.put("/<goal_id>")
 def update_one_goal(goal_id):
-    goal = validate_goal(goal_id)
+    goal = validate_model(Goal, goal_id)
 
     request_body = request.get_json()
 
@@ -55,7 +55,7 @@ def update_one_goal(goal_id):
 
 @goals_bp.delete("/<goal_id>")
 def delete_goal_with_id(goal_id):
-    goal = validate_goal(goal_id)
+    goal = validate_model(Goal, goal_id)
 
     db.session.delete(goal)
     db.session.commit()
