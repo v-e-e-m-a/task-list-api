@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, make_response, request, Response
 from sqlalchemy import desc
 from app.models.task import Task, datetime
-from .route_utilities import validate_task, validate_post_attribute
+from .route_utilities import validate_model, validate_post_attribute
 import os
 from slack_sdk import WebClient
 from ..db import db
@@ -51,13 +51,13 @@ def get_all_tasks():
 
 @tasks_bp.get("/<task_id>")
 def get_one_task(task_id):
-    task = validate_task(task_id)
+    task = validate_model(Task, task_id)
 
     return task.to_dict()
 
 @tasks_bp.put("/<task_id>")
 def update_one_task(task_id):
-    task = validate_task(task_id)
+    task = validate_model(Task, task_id)
 
     request_body = request.get_json()
 
@@ -71,7 +71,7 @@ def update_one_task(task_id):
 
 @tasks_bp.delete("/<task_id>")
 def delete_one_task(task_id):
-    task = validate_task(task_id)
+    task = validate_model(Task, task_id)
 
     db.session.delete(task)
     db.session.commit()
@@ -80,7 +80,7 @@ def delete_one_task(task_id):
 
 @tasks_bp.patch("<task_id>/mark_complete")
 def mark_complete_by_task_id(task_id):
-    task = validate_task(task_id)
+    task = validate_model(Task, task_id)
 
     task.is_complete = True
     task.completed_at = datetime.now()
@@ -104,7 +104,7 @@ def mark_complete_by_task_id(task_id):
 
 @tasks_bp.patch("<task_id>/mark_incomplete")
 def mark_incomplete(task_id):
-    task = validate_task(task_id)
+    task = validate_model(Task, task_id)
 
     task.is_complete = False
     task.completed_at = None
