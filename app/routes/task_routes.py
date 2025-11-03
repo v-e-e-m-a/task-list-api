@@ -87,18 +87,18 @@ def mark_complete_by_task_id(task_id):
 
     db.session.commit()
 
-    # Send to Slack API
-    message = f"Someone just completed the task {task.title}"
+    # # Send to Slack API
+    # message = f"Someone just completed the task {task.title}"
 
-    # Set up a WebClient with the Slack OAuth token
-    client = WebClient(token=os.environ.get("SLACK_OAUTH_TOKEN"))
+    # # Set up a WebClient with the Slack OAuth token
+    # client = WebClient(token=os.environ.get("SLACK_OAUTH_TOKEN"))
 
-    # Send a message
-    client.chat_postMessage(
-        channel="test-slack-api", 
-        text=message, 
-        username="Veema's TaskList API"
-    )
+    # # Send a message to Slack
+    # client.chat_postMessage(
+    #     channel="test-slack-api", 
+    #     text=message, 
+    #     username="Veema's TaskList API"
+    # )
 
     return task.to_dict(), 204
 
