@@ -9,7 +9,7 @@ from ..db import db
 goals_bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
 
 @goals_bp.post("")
-def create_task():
+def create_goal():
     request_body = request.get_json()
     
     title = validate_post_attribute(request_body, "title")
