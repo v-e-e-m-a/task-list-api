@@ -68,20 +68,16 @@ def add_tasks_to_goal(goal_id):
     goal = validate_model(Goal, goal_id)
     
     request_body = request.get_json()
-    # Validate request body
-    if not request_body or "task_ids" not in request_body:
-        return {"details": "Invalid data"}, 400
+
+    validate_post_attribute(request_body, "task_ids")
 
     task_ids = request_body["task_ids"]
 
-    # Build list of Task objects (validate each exists). This will raise a
-    # 404 via validate_model if any id is invalid.
     tasks_to_add = []
     for task_id in task_ids:
         task = validate_model(Task, task_id)
         tasks_to_add.append(task)
 
-    # Overwrite any existing tasks for this goal with the provided list.
     goal.tasks = tasks_to_add
 
     db.session.commit()

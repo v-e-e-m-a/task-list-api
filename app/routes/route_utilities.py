@@ -34,6 +34,7 @@ def validate_model(cls, model_id):
     return model
 
 def validate_post_attribute(request_body, attribute):
+    
     if request_body.get(attribute):
         return request_body[attribute]
     else:

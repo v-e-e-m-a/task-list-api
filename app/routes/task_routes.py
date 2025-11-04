@@ -11,18 +11,8 @@ tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 @tasks_bp.post("")
 def create_task():
     request_body = request.get_json()
-    
-    title = validate_post_attribute(request_body, "title")
-    description = validate_post_attribute(request_body, "description")
-    is_complete = request_body.get("is_complete", False)
 
-    task_data = {
-        "title": title,
-        "description": description,
-        "is_complete": is_complete
-    }
-
-    new_task = create_model(Task, task_data)
+    new_task = create_model(Task, request_body)
 
     return new_task
 
@@ -35,9 +25,10 @@ def get_all_tasks():
 
     if sort_param == "asc":
         query = query.order_by(Task.title)
-    
-    if sort_param == "desc":
+    elif sort_param == "desc":
         query = query.order_by(desc(Task.title))
+    else:
+        query = query.order_by(Task.id)
 
     tasks = db.session.scalars(query)
 
@@ -59,8 +50,8 @@ def update_one_task(task_id):
 
     request_body = request.get_json()
 
-    task.title = request_body["title"]
-    task.description = request_body["description"]
+    task.title = request_body.get("title", task.title)
+    task.description = request_body.get("description", task.description)
     task.is_complete = request_body.get("is_complete", False)
 
     db.session.commit()
@@ -85,20 +76,20 @@ def mark_complete_by_task_id(task_id):
 
     db.session.commit()
 
-    # # Send to Slack API
-    # message = f"Someone just completed the task {task.title}"
-
-    # # Set up a WebClient with the Slack OAuth token
-    # client = WebClient(token=os.environ.get("SLACK_OAUTH_TOKEN"))
-
-    # # Send a message to Slack
-    # client.chat_postMessage(
-    #     channel="test-slack-api", 
-    #     text=message, 
-    #     username="Veema's TaskList API"
-    # )
+    send_completed_task_to_slack_api(task)
 
     return task.to_dict(), 204
+
+def send_completed_task_to_slack_api(task):
+    message = f"Someone just completed the task {task.title}"
+
+    client = WebClient(token=os.environ.get("SLACK_OAUTH_TOKEN"))
+
+    client.chat_postMessage(
+        channel="test-slack-api", 
+        text=message, 
+        username="Veema's TaskList API"
+    )
 
 @tasks_bp.patch("<task_id>/mark_incomplete")
 def mark_incomplete(task_id):

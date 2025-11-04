@@ -196,7 +196,37 @@ def test_update_task(client, one_task):
     assert task.description == "Updated Test Description"
     assert task.completed_at == None
 
+def test_update_task_title_only(client, one_task):
+    # Act
+    response = client.put("/tasks/1", json={
+        "title": "Updated Task Title"
+    })
 
+    # Assert
+    assert response.status_code == 204
+
+    query = db.select(Task).where(Task.id == 1)
+    task = db.session.scalar(query)
+
+    assert task.title == "Updated Task Title"
+    assert task.description == "Notice something new every day"
+    assert task.completed_at == None
+
+def test_update_task_description_only(client, one_task):
+    # Act
+    response = client.put("/tasks/1", json={
+        "description": "Updated Test Description"
+    })
+
+    # Assert
+    assert response.status_code == 204
+
+    query = db.select(Task).where(Task.id == 1)
+    task = db.session.scalar(query)
+
+    assert task.title == "Go on my daily walk 🏞"
+    assert task.description == "Updated Test Description"
+    assert task.completed_at == None
 
 #@pytest.mark.skip(reason="No way to test this feature yet")
 def test_update_task_not_found(client):
