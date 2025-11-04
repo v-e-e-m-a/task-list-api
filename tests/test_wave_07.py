@@ -134,7 +134,7 @@ def test_route_utilities_create_model_with_task_missing_title(client):
     assert response.get_json() == {"details": "Invalid data"}
 
 
-@pytest.mark.skip(reason="No way to test this feature yet")
+# @pytest.mark.skip(reason="No way to test this feature yet")
 def test_route_utilities_create_model_with_goal(client):
     #Arrange
     request_body = {
@@ -149,7 +149,7 @@ def test_route_utilities_create_model_with_goal(client):
     assert response[0]["title"] == "Seize the Day!"
     assert response[1] == 201
 
-@pytest.mark.skip(reason="No way to test this feature yet")
+# @pytest.mark.skip(reason="No way to test this feature yet")
 def test_route_utilities_create_model_with_goal_missing_title(client):
     #Arrange
     request_body = {
@@ -159,7 +159,11 @@ def test_route_utilities_create_model_with_goal_missing_title(client):
     with pytest.raises(HTTPException) as e:
         create_model(Goal, request_body)
     
-    raise Exception("Complete test with assertion status code and response body")
+    # raise Exception("Complete test with assertion status code and response body")
     # *****************************************************************************
     # **Complete test with assertion about status code response body***************
     # *****************************************************************************
+
+    response = e.value.get_response()
+    assert response.status_code == 400
+    assert response.get_json() == {"details": "Invalid data"}
