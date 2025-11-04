@@ -1,6 +1,7 @@
 from flask import Blueprint, abort, make_response, request, Response
 from sqlalchemy import desc
 from app.models.goal import Goal
+from app.models.task import Task
 from .route_utilities import validate_post_attribute, validate_model, create_model
 import os
 from slack_sdk import WebClient
@@ -61,3 +62,45 @@ def delete_goal_with_id(goal_id):
     db.session.commit()
 
     return Response(status=204, mimetype="application/json")
+
+@goals_bp.post("/<goal_id>/tasks")
+def add_tasks_to_goal(goal_id):
+    goal = validate_model(Goal, goal_id)
+    
+    request_body = request.get_json()
+    # Validate request body
+    if not request_body or "task_ids" not in request_body:
+        return {"details": "Invalid data"}, 400
+
+    task_ids = request_body["task_ids"]
+
+    # Build list of Task objects (validate each exists). This will raise a
+    # 404 via validate_model if any id is invalid.
+    tasks_to_add = []
+    for task_id in task_ids:
+        task = validate_model(Task, task_id)
+        tasks_to_add.append(task)
+
+    # Overwrite any existing tasks for this goal with the provided list.
+    goal.tasks = tasks_to_add
+
+    db.session.commit()
+
+    response = {
+        "id": goal.id,
+        "task_ids": [task.id for task in goal.tasks]
+    }
+
+    return response
+
+@goals_bp.get("/<goal_id>/tasks")
+def get_tasks_by_goal(goal_id):
+    goal = validate_model(Goal, goal_id)
+    tasks = [task.to_dict() for task in goal.tasks]
+    response = {
+        "id": goal.id,
+        "title": goal.title,
+        "tasks": tasks
+    }
+    return response
+

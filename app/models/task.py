@@ -1,5 +1,8 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Boolean, DateTime
+from __future__ import annotations
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Boolean, DateTime, ForeignKey
+from typing import Optional, TYPE_CHECKING
 from ..db import db
 from datetime import datetime
 
@@ -9,6 +12,10 @@ class Task(db.Model):
     description: Mapped[str] = mapped_column()
     is_complete: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True, server_default=None)
+    goal_id: Mapped[Optional[int]] = mapped_column(ForeignKey("goal.id"))
+    # Relationship should point back to Goal.tasks (back_populates='tasks').
+    # Specify the target class name explicitly to avoid forward-ref resolution issues.
+    goal: Mapped[Optional["Goal"]] = relationship("Goal", back_populates="tasks")
     
     def to_dict(self):
         """Return a plain dict of this Task's attribute values.
@@ -27,6 +34,9 @@ class Task(db.Model):
             # return False in that case to match test expectations
             "is_complete": self.is_complete if self.is_complete else False
         }
+
+        if self.goal:
+            task_as_dict["goal_id"] = self.goal.id
 
         return task_as_dict
     
