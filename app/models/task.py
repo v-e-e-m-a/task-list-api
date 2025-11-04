@@ -42,8 +42,20 @@ class Task(db.Model):
     
     @classmethod
     def from_dict(cls, task_data):
+        # Required fields: title and description. Let KeyError propagate
+        # for missing required fields so callers can return a 400.
+        title = task_data["title"]
+        description = task_data["description"]
+
+        # Optional fields with sensible defaults
+        is_complete = task_data.get("is_complete", False)
+        completed_at = task_data.get("completed_at", None)
+
         new_task = cls(
-                        title=task_data["title"],
-                        description=task_data["description"],
-                        is_complete=task_data["is_complete"])
+            title=title,
+            description=description,
+            is_complete=is_complete,
+            completed_at=completed_at,
+        )
+
         return new_task
