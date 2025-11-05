@@ -5,7 +5,6 @@ from .route_utilities import validate_model, validate_post_attribute, create_mod
 import os
 import requests
 import json
-from slack_sdk import WebClient
 from ..db import db
 
 tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
