@@ -82,11 +82,8 @@ def mark_complete_by_task_id(task_id):
     return task.to_dict(), 204
 
 def send_completed_task_to_slack_api(task):
-    
     token = "SLACK_OAUTH_TOKEN"
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {os.environ.get(token)}"}
-
-    #print(os.environ.get(token))
 
     data = {
         "channel": "C09N95RPR34",
