@@ -3,6 +3,8 @@ from sqlalchemy import desc
 from app.models.task import Task, datetime
 from .route_utilities import validate_model, validate_post_attribute, create_model
 import os
+import requests
+import json
 from slack_sdk import WebClient
 from ..db import db
 
@@ -81,15 +83,18 @@ def mark_complete_by_task_id(task_id):
     return task.to_dict(), 204
 
 def send_completed_task_to_slack_api(task):
-    message = f"Someone just completed the task {task.title}"
+    
+    token = "SLACK_OAUTH_TOKEN"
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {os.environ.get(token)}"}
 
-    client = WebClient(token=os.environ.get("SLACK_OAUTH_TOKEN"))
+    #print(os.environ.get(token))
 
-    client.chat_postMessage(
-        channel="test-slack-api", 
-        text=message, 
-        username="Veema's TaskList API"
-    )
+    data = {
+        "channel": "C09N95RPR34",
+        "text": f"Someone just completed the task {task.title}"
+    }
+    post_url = "https://slack.com/api/chat.postMessage"
+    post_response = requests.post(post_url, headers=headers, json=data)
 
 @tasks_bp.patch("<task_id>/mark_incomplete")
 def mark_incomplete(task_id):
