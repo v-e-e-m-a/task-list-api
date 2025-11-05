@@ -4,7 +4,6 @@ from app.models.goal import Goal
 from app.models.task import Task
 from .route_utilities import validate_post_attribute, validate_model, create_model
 import os
-from slack_sdk import WebClient
 from ..db import db
 
 goals_bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
